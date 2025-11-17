@@ -2,6 +2,7 @@ import { MongoClient, Db } from 'mongodb'
 
 let client: MongoClient | null = null
 let dbInstance: Db | null = null
+let connected = false
 
 export async function connectToMongo(uri?: string, dbName?: string) {
   const MONGODB_URI = uri ?? process.env.MONGODB_URI
@@ -25,7 +26,7 @@ export async function connectToMongo(uri?: string, dbName?: string) {
     }
   }
   dbInstance = client.db(resolvedName)
-
+  connected = true
   console.log('MongoDB connected', resolvedName ?? '(default)')
   return { client, db: dbInstance }
 }
@@ -39,4 +40,9 @@ export async function closeMongo() {
   if (client) await client.close()
   client = null
   dbInstance = null
+  connected = false
+}
+
+export function isConnected() {
+  return connected
 }
