@@ -1,10 +1,11 @@
 import express from 'express'
-import { connectToMongo, isConnected } from './db.js'
+import { connectToMongo, isConnected, getConnectionInfo } from './db.js'
 
 const app = express()
 
 app.get('/', (_req, res) => {
-  res.json({ message: 'Hello Express!', dbConnected: isConnected() })
+  const info = getConnectionInfo()
+  res.json({ message: 'Hello Express!', dbConnected: isConnected(), dbStatus: info.status, dbError: info.lastError })
 })
 
 // Try to connect to MongoDB on module load. This won't prevent the app from
